@@ -1,7 +1,8 @@
 package com.herego.api.models;
 
-import java.math.BigInteger;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Past;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Users {
-    private BigInteger id;
+    private Integer id;
     @Pattern(regexp = "/^[a-zA-Z]+$/", message = "En el nombre solo pueden ir letras")
     @Size(max = 50, min = 3, message = "Debe ingresar sus nombres")
     private String name;
@@ -37,4 +38,15 @@ public class Users {
     private String dni;
     @Email(message = "El correo no tiene un formato correcto")
     private String email;
+
+    public Users(ResultSet rs) throws SQLException {
+        this.id = rs.getInt("id");
+        this.name = rs.getString("name");
+        this.lastName = rs.getString("lastName");
+        this.userType = UserType.valueOf(rs.getString("userType"));
+        this.BirthDay = rs.getDate("birthday");
+        this.phone = rs.getString("phone");
+        this.dni = rs.getString("dni");
+        this.email = rs.getString("email");
+    }
 }
