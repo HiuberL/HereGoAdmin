@@ -14,7 +14,7 @@ import org.jboss.logging.Logger;
 
 import com.herego.api.configurations.DriverConnection;
 import com.herego.api.dictionaries.StoreProcedureEnum;
-import com.herego.api.exceptions.ConnectionExceptions;
+import com.herego.api.exceptions.ConnectionException;
 import com.herego.api.models.Users;
 import com.herego.api.repositories.implementations.UserImpl;
 import static com.herego.api.utils.DataFormat.formaterSp;
@@ -32,7 +32,7 @@ public class UserRepository implements UserImpl {
     }
 
     @Override
-    public Optional<Users> getUserById(String idUser) throws ConnectionExceptions, SQLException {
+    public Optional<Users> getUserById(String idUser) throws ConnectionException, SQLException {
         Connection connection = driverConnection.createConection();
         CallableStatement cstmt = null;
         ResultSet resultSet = null;

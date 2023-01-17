@@ -1,7 +1,5 @@
 package com.herego.api.exceptions;
 
-import java.sql.SQLException;
-
 import javax.ws.rs.core.Response.Status;
 
 import com.herego.api.dictionaries.ResponseEnum;
@@ -11,20 +9,20 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ConnectionExceptions extends SQLException {
+public class NotFoundException extends Exception {
     private int codeError;
     private String messageUser;
     private String messageSystem;
     private Status responsehttp;
 
-    public ConnectionExceptions(ResponseEnum response) {
+    public NotFoundException(ResponseEnum response) {
         this.codeError = response.getCodeError();
         this.messageUser = response.getMessageUser();
         this.messageSystem = response.getMessageSystem();
         this.responsehttp = response.getResponsehttp();
     }
 
-    public ConnectionExceptions(ResponseEnum response, Exception e) {
+    public NotFoundException(ResponseEnum response, Exception e) {
         this.codeError = response.getCodeError();
         this.messageUser = response.getMessageUser();
         this.messageSystem = this.getClass().getCanonicalName() + e.getMessage();

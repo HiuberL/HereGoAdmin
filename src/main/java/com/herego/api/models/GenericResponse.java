@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.herego.api.dictionaries.ResponseEnum;
 
 @Getter
 @Setter
@@ -18,4 +19,23 @@ public class GenericResponse {
     private String messageUser;
     @JsonbTransient
     private Status httpCode;
+
+    public GenericResponse() {
+
+    }
+
+    public GenericResponse(ResponseEnum responses) {
+        this.codeError = responses.getCodeError();
+        this.messageSystem = responses.getMessageSystem();
+        this.messageUser = responses.getMessageUser();
+        this.httpCode = responses.getResponsehttp();
+    }
+
+    public void initValues(ResponseEnum responses) {
+        this.codeError = responses.getCodeError();
+        this.messageSystem = responses.getMessageSystem();
+        this.messageUser = responses.getMessageUser();
+        this.httpCode = responses.getResponsehttp();
+    }
+
 }

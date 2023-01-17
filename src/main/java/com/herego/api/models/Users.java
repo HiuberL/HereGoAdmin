@@ -28,7 +28,7 @@ public class Users {
     @com.herego.api.utils.annotations.UserType
     private UserType userType;
     @Past
-    private Date BirthDay;
+    private Date birthDay;
     @Pattern(regexp = "/^[0-9]+$/", message = "El número celular no es válido")
     @Size(max = 10, min = 10, message = "El número celular debe ser de 10 dígitos")
     private String phone;
@@ -44,7 +44,7 @@ public class Users {
         this.name = rs.getString("name");
         this.lastName = rs.getString("lastName");
         this.userType = UserType.valueOf(rs.getString("userType"));
-        this.BirthDay = rs.getDate("birthday");
+        this.birthDay = rs.getDate("birthday");
         this.phone = rs.getString("phone");
         this.dni = rs.getString("dni");
         this.email = rs.getString("email");
