@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum StoreProcedureEnum {
-    C_USER_ID("public", "c_userbyid_account", 1);
+    C_USER_ID("public", "s_userbyid_account", 1);
 
     private String name;
     private String schema;

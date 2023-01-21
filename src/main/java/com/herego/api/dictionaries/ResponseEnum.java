@@ -15,6 +15,8 @@ public enum ResponseEnum {
                         "Problemas al conectarse con la base de datos.",
                         Status.SERVICE_UNAVAILABLE),
         SQLERROR(501, "Esta opción no está disponible por el momento", "",
+                        Status.SERVICE_UNAVAILABLE),
+        NOTEXPECT(999, "Problemas en el servicio por el momento", "",
                         Status.SERVICE_UNAVAILABLE);
 
         private int codeError;

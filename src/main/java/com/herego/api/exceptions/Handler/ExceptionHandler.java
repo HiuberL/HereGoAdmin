@@ -5,18 +5,16 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import com.herego.api.dictionaries.ResponseEnum;
-import com.herego.api.exceptions.ConnectionException;
 import com.herego.api.models.GenericResponse;
 
 @Provider
-public class ConnectionExceptionHandler implements ExceptionMapper<ConnectionException> {
+public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
-    public Response toResponse(ConnectionException e) {
+    public Response toResponse(Exception e) {
         GenericResponse response = new GenericResponse();
-        response.initValues(ResponseEnum.NOTCONNECTION);
-        response.setMessageSystem(e.getMessageSystem());
+        response.initValues(ResponseEnum.NOTEXPECT);
+        response.setMessageSystem(e.getMessage());
         return Response.status(response.getHttpCode()).entity(response).build();
     }
-
 }

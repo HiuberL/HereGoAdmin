@@ -27,9 +27,7 @@ public class DriverConnection {
             if (connection.isClosed()) {
                 throw new ConnectionException(ResponseEnum.NOTCONNECTION);
             }
-            log.info("*****Inicializando llamada a base*****");
         } catch (SQLException e) {
-            log.error("*****[ERROR]***** ", e);
             throw new ConnectionException(ResponseEnum.NOTCONNECTION, e);
         }
         return connection;
