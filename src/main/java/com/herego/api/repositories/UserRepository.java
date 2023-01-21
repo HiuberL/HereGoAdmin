@@ -17,8 +17,10 @@ import org.jboss.logging.Logger;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.herego.api.configurations.DriverConnection;
+import com.herego.api.controllers.dto.UpdateUser;
 import com.herego.api.dictionaries.ResponseEnum;
 import com.herego.api.dictionaries.StoreProcedureEnum;
+import com.herego.api.dictionaries.ConfigurationsEnum.UserState;
 import com.herego.api.exceptions.ConnectionException;
 import com.herego.api.exceptions.CrudException;
 import com.herego.api.exceptions.NotFoundException;
@@ -69,7 +71,7 @@ public class UserRepository {
         CallableStatement cstmt = null;
         int code = 0;
         String msg = "";
-        cstmt = connection.prepareCall(formaterSp(StoreProcedureEnum.I_USER_ID), ResultSet.TYPE_SCROLL_SENSITIVE,
+        cstmt = connection.prepareCall(formaterSp(StoreProcedureEnum.I_USER), ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         cstmt.setString(1, newUser.getName());
         cstmt.setString(2, newUser.getLastName());
@@ -85,16 +87,48 @@ public class UserRepository {
         msg = cstmt.getString(9);
         code = cstmt.getInt(10);
         if (code != 0) {
-            throw new CrudException(code, "Solicitud no puede ser procesada", msg, null);
+            throw new CrudException(code, msg, "Solicitud no puede ser procesada", null);
         }
     }
 
-    public boolean updateUser(Users editUser) {
-        return false;
+    public void updateUser(String phoneUser, UpdateUser editUser) throws SQLException, CrudException {
+        Connection connection = driverConnection.createConection();
+        CallableStatement cstmt = null;
+        int code = 0;
+        String msg = "";
+        cstmt = connection.prepareCall(formaterSp(StoreProcedureEnum.U_USER_ID), ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+        cstmt.setString(1, editUser.getUserType());
+        cstmt.setString(2, phoneUser);
+        cstmt.setString(3, editUser.getEmail());
+        cstmt.setString(4, editUser.getUserState());
+        cstmt.registerOutParameter(5, Types.VARCHAR);
+        cstmt.registerOutParameter(6, Types.INTEGER);
+        cstmt.execute();
+        msg = cstmt.getString(5);
+        code = cstmt.getInt(6);
+        if (code != 0) {
+            throw new CrudException(code, msg, "Solicitud no puede ser procesada", null);
+        }
     }
 
-    public boolean deleteUser(String idUser) {
-        return false;
+    public void deleteUser(String phoneUser, UserState state) throws SQLException, CrudException {
+        Connection connection = driverConnection.createConection();
+        CallableStatement cstmt = null;
+        int code = 0;
+        String msg = "";
+        cstmt = connection.prepareCall(formaterSp(StoreProcedureEnum.U_USER_STATE_ID), ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+        cstmt.setString(1, phoneUser);
+        cstmt.setString(2, state.name());
+        cstmt.registerOutParameter(3, Types.VARCHAR);
+        cstmt.registerOutParameter(4, Types.INTEGER);
+        cstmt.execute();
+        msg = cstmt.getString(3);
+        code = cstmt.getInt(4);
+        if (code != 0) {
+            throw new CrudException(code, msg, "Solicitud no puede ser procesada", null);
+        }
     }
 
 }
