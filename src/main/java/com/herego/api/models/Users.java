@@ -7,9 +7,9 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.herego.api.dictionaries.ConfigurationsEnum.UserState;
-import com.herego.api.dictionaries.ConfigurationsEnum.UserType;
 import com.herego.api.utils.annotations.DNI;
+import com.herego.api.utils.annotations.StateUser;
+import com.herego.api.utils.annotations.TypeUser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +18,14 @@ import lombok.Setter;
 @Setter
 public class Users {
     private Integer id;
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "En el nombre solo pueden ir letras")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "En el nombre solo pueden ir letras")
     @Size(max = 50, min = 3, message = "Debe ingresar sus nombres")
     private String name;
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "En el apellido solo pueden ir letras")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "En el apellido solo pueden ir letras")
     @Size(max = 50, min = 3, message = "Debe ingresar sus apellido")
     private String lastName;
-    @com.herego.api.utils.annotations.UserType
-    private UserType userType;
+    @TypeUser
+    private String userType;
     @Past
     private Date birthday;
     @Pattern(regexp = "^[0-9]+$", message = "El número celular no es válido")
@@ -37,7 +37,7 @@ public class Users {
     private String dni;
     @Email(message = "El correo no tiene un formato correcto")
     private String email;
-    @com.herego.api.utils.annotations.UserState(message = "El estado no corresponde a lo esperado")
-    private UserState userState;
+    @StateUser(message = "El estado no corresponde a lo esperado")
+    private String userState;
 
 }

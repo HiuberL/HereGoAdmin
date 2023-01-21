@@ -11,6 +11,8 @@ public enum ResponseEnum {
                         Status.NOT_FOUND),
         NOPASSVALID(101, "", "Los datos ingresados no pasaron la validación",
                         Status.BAD_REQUEST),
+        BADREQUEST(404, "", "",
+                        Status.BAD_REQUEST),
         NOTCONNECTION(500, "Problemas al conectarse con la base de datos.",
                         "Problemas al conectarse con la base de datos.",
                         Status.SERVICE_UNAVAILABLE),

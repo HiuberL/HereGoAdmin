@@ -8,14 +8,14 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 
-import com.herego.api.utils.annotations.Validators.UserTypeValidator;
+import com.herego.api.utils.annotations.Validators.UserStateValidator;
 
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = UserTypeValidator.class)
-public @interface UserType {
-    public String message() default "El tipo de usuario no es correspondiente a lo esperado";
+@Constraint(validatedBy = UserStateValidator.class)
+public @interface StateUser {
+    public String message() default "El estado de usuario no es correspondiente a lo esperado";
 
     public abstract java.lang.Class<?>[] groups() default {};
 
