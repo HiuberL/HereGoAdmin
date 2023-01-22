@@ -14,7 +14,7 @@ public enum StoreProcedureEnum {
     S_COMMUNITY_BY_USER("public", "s_community_by_users_account", 4),
     S_COMMUNITY_BY_ID("public", "s_communitybyid_account", 1),
     D_COMMUNITY_USERS_ID("public", "d_community_users_account", 4),
-    I_COMMUNITY_ACCOUNT("public", "i_community_account", 5),
+    I_COMMUNITY_ACCOUNT("public", "i_community_account", 6),
     I_COMMUNITY_USER_ACCOUNT("public", "i_community_users_account", 5),
     U_COMMUNITY_USER_ACCOUNT("public", "u_community_users_account", 5);
 

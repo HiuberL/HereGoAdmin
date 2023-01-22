@@ -18,6 +18,7 @@ import org.jboss.logging.Logger;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.herego.api.configurations.DriverConnection;
+import com.herego.api.controllers.dto.GetUsers;
 import com.herego.api.controllers.dto.UpdateUser;
 import com.herego.api.dictionaries.ResponseEnum;
 import com.herego.api.dictionaries.StoreProcedureEnum;
@@ -35,12 +36,12 @@ public class UserRepository {
     @Inject
     Logger log;
 
-    public List<Users> getUsers(String search, int page, int max)
+    public List<GetUsers> getUsers(String search, int page, int max)
             throws ConnectionException, SQLException, NotFoundException {
         Connection connection = driverConnection.createConection();
         CallableStatement cstmt = null;
         ResultSet resultSet = null;
-        List<Users> responseUsers = new ArrayList<>();
+        List<GetUsers> responseUsers = new ArrayList<>();
         cstmt = connection.prepareCall(formaterFun(StoreProcedureEnum.S_ALL_USER), ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         cstmt.setString(1, search);
@@ -56,7 +57,7 @@ public class UserRepository {
                 row.put(md.getColumnName(i), resultSet.getObject(i));
             }
             if (!row.isEmpty()) {
-                responseUsers.add(mapper.convertValue(row, new TypeReference<Users>() {
+                responseUsers.add(mapper.convertValue(row, new TypeReference<GetUsers>() {
                 }));
             }
         }
@@ -66,11 +67,11 @@ public class UserRepository {
         return responseUsers;
     }
 
-    public Optional<Users> getUserById(String idUser) throws ConnectionException, SQLException, NotFoundException {
+    public Optional<GetUsers> getUserById(String idUser) throws ConnectionException, SQLException, NotFoundException {
         Connection connection = driverConnection.createConection();
         CallableStatement cstmt = null;
         ResultSet resultSet = null;
-        Optional<Users> responseUsers = Optional.empty();
+        Optional<GetUsers> responseUsers = Optional.empty();
         cstmt = connection.prepareCall(formaterFun(StoreProcedureEnum.S_USER_ID), ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         cstmt.setString(1, idUser);
@@ -85,7 +86,7 @@ public class UserRepository {
             }
         }
         if (!row.isEmpty())
-            responseUsers = Optional.ofNullable(mapper.convertValue(row, new TypeReference<Users>() {
+            responseUsers = Optional.ofNullable(mapper.convertValue(row, new TypeReference<GetUsers>() {
             }));
         else {
             throw new NotFoundException(ResponseEnum.NOTFOUND);
