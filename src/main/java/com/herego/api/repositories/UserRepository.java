@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +36,33 @@ public class UserRepository {
     @Inject
     Logger log;
 
-    public List<Users> getUsers() {
-        return null;
+    public List<Users> getUsers(int page, int max) throws ConnectionException, SQLException, NotFoundException {
+        Connection connection = driverConnection.createConection();
+        CallableStatement cstmt = null;
+        ResultSet resultSet = null;
+        List<Users> responseUsers = new ArrayList<>();
+        cstmt = connection.prepareCall(formaterFun(StoreProcedureEnum.S_ALL_USER), ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+        cstmt.setInt(1, page);
+        cstmt.setInt(2, max);
+        resultSet = cstmt.executeQuery();
+        ResultSetMetaData md = resultSet.getMetaData();
+        int columns = md.getColumnCount();
+        HashMap<String, Object> row = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        while (resultSet.next()) {
+            for (int i = 1; i <= columns; i++) {
+                row.put(md.getColumnName(i), resultSet.getObject(i));
+            }
+            if (!row.isEmpty()) {
+                responseUsers.add(mapper.convertValue(row, new TypeReference<Users>() {
+                }));
+            }
+        }
+        if (responseUsers.isEmpty())
+            throw new NotFoundException(ResponseEnum.NOTFOUND);
+
+        return responseUsers;
     }
 
     public Optional<Users> getUserById(String idUser) throws ConnectionException, SQLException, NotFoundException {

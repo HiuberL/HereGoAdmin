@@ -22,6 +22,13 @@ public class UserService {
     @Inject
     UserRepository userRepository;
 
+    public GetUsersResponse getUsers(int page, int max) throws ConnectionException, NotFoundException, SQLException {
+        GetUsersResponse response = new GetUsersResponse();
+        response.initValues(ResponseEnum.OK);
+        response.setResponse(this.userRepository.getUsers(page, max));
+        return response;
+    }
+
     public GetUsersResponse getUserById(String idUser) throws ConnectionException, NotFoundException, SQLException {
         GetUsersResponse response = new GetUsersResponse();
         response.initValues(ResponseEnum.OK);

@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetUsersResponse extends GenericResponse {
-    private Users response;
+    private Object response;
 }
