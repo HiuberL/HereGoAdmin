@@ -8,7 +8,6 @@ import javax.validation.Valid;
 
 import com.herego.api.controllers.dto.UpdateUser;
 import com.herego.api.dictionaries.ResponseEnum;
-import com.herego.api.dictionaries.ConfigurationsEnum.UserState;
 import com.herego.api.exceptions.ConnectionException;
 import com.herego.api.exceptions.CrudException;
 import com.herego.api.exceptions.NotFoundException;
@@ -22,10 +21,11 @@ public class UserService {
     @Inject
     UserRepository userRepository;
 
-    public GetUsersResponse getUsers(int page, int max) throws ConnectionException, NotFoundException, SQLException {
+    public GetUsersResponse getUsers(String search, int page, int max)
+            throws ConnectionException, NotFoundException, SQLException {
         GetUsersResponse response = new GetUsersResponse();
         response.initValues(ResponseEnum.OK);
-        response.setResponse(this.userRepository.getUsers(page, max));
+        response.setResponse(this.userRepository.getUsers(search, page, max));
         return response;
     }
 
@@ -53,7 +53,7 @@ public class UserService {
         return response;
     }
 
-    public GenericResponse deleteUser(String phoneUser, UserState userState)
+    public GenericResponse deleteUser(String phoneUser, int userState)
             throws ConnectionException, SQLException, CrudException {
         GenericResponse response = new GenericResponse();
         response.initValues(ResponseEnum.OK);

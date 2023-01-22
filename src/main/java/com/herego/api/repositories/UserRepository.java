@@ -21,7 +21,6 @@ import com.herego.api.configurations.DriverConnection;
 import com.herego.api.controllers.dto.UpdateUser;
 import com.herego.api.dictionaries.ResponseEnum;
 import com.herego.api.dictionaries.StoreProcedureEnum;
-import com.herego.api.dictionaries.ConfigurationsEnum.UserState;
 import com.herego.api.exceptions.ConnectionException;
 import com.herego.api.exceptions.CrudException;
 import com.herego.api.exceptions.NotFoundException;
@@ -36,15 +35,17 @@ public class UserRepository {
     @Inject
     Logger log;
 
-    public List<Users> getUsers(int page, int max) throws ConnectionException, SQLException, NotFoundException {
+    public List<Users> getUsers(String search, int page, int max)
+            throws ConnectionException, SQLException, NotFoundException {
         Connection connection = driverConnection.createConection();
         CallableStatement cstmt = null;
         ResultSet resultSet = null;
         List<Users> responseUsers = new ArrayList<>();
         cstmt = connection.prepareCall(formaterFun(StoreProcedureEnum.S_ALL_USER), ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
-        cstmt.setInt(1, page);
-        cstmt.setInt(2, max);
+        cstmt.setString(1, search);
+        cstmt.setInt(2, page);
+        cstmt.setInt(3, max);
         resultSet = cstmt.executeQuery();
         ResultSetMetaData md = resultSet.getMetaData();
         int columns = md.getColumnCount();
@@ -101,17 +102,16 @@ public class UserRepository {
                 ResultSet.CONCUR_READ_ONLY);
         cstmt.setString(1, newUser.getName());
         cstmt.setString(2, newUser.getLastName());
-        cstmt.setString(3, newUser.getUserType());
+        cstmt.setInt(3, newUser.getUserType());
         cstmt.setDate(4, newUser.getBirthday());
         cstmt.setString(5, newUser.getPhone());
         cstmt.setString(6, newUser.getDni());
         cstmt.setString(7, newUser.getEmail());
-        cstmt.setString(8, newUser.getUserState());
-        cstmt.registerOutParameter(9, Types.VARCHAR);
-        cstmt.registerOutParameter(10, Types.INTEGER);
+        cstmt.registerOutParameter(8, Types.VARCHAR);
+        cstmt.registerOutParameter(9, Types.INTEGER);
         cstmt.execute();
-        msg = cstmt.getString(9);
-        code = cstmt.getInt(10);
+        msg = cstmt.getString(8);
+        code = cstmt.getInt(9);
         if (code != 0) {
             throw new CrudException(code, msg, "Solicitud no puede ser procesada", null);
         }
@@ -124,10 +124,10 @@ public class UserRepository {
         String msg = "";
         cstmt = connection.prepareCall(formaterSp(StoreProcedureEnum.U_USER_ID), ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
-        cstmt.setString(1, editUser.getUserType());
+        cstmt.setInt(1, editUser.getUserType());
         cstmt.setString(2, phoneUser);
         cstmt.setString(3, editUser.getEmail());
-        cstmt.setString(4, editUser.getUserState());
+        cstmt.setInt(4, editUser.getUserState());
         cstmt.registerOutParameter(5, Types.VARCHAR);
         cstmt.registerOutParameter(6, Types.INTEGER);
         cstmt.execute();
@@ -138,7 +138,7 @@ public class UserRepository {
         }
     }
 
-    public void deleteUser(String phoneUser, UserState state) throws SQLException, CrudException {
+    public void deleteUser(String phoneUser, Integer state) throws SQLException, CrudException {
         Connection connection = driverConnection.createConection();
         CallableStatement cstmt = null;
         int code = 0;
@@ -146,7 +146,7 @@ public class UserRepository {
         cstmt = connection.prepareCall(formaterSp(StoreProcedureEnum.U_USER_STATE_ID), ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         cstmt.setString(1, phoneUser);
-        cstmt.setString(2, state.name());
+        cstmt.setInt(2, state);
         cstmt.registerOutParameter(3, Types.VARCHAR);
         cstmt.registerOutParameter(4, Types.INTEGER);
         cstmt.execute();

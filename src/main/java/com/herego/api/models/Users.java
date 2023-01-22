@@ -3,13 +3,12 @@ package com.herego.api.models;
 import java.sql.Date;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.herego.api.utils.annotations.DNI;
-import com.herego.api.utils.annotations.StateUser;
-import com.herego.api.utils.annotations.TypeUser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,8 +23,8 @@ public class Users {
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "En el apellido solo pueden ir letras")
     @Size(max = 50, min = 3, message = "Debe ingresar sus apellido")
     private String lastName;
-    @TypeUser
-    private String userType;
+    @NotNull(message = "El tipo de usuario no corresponde a lo esperado")
+    private Integer userType;
     @Past
     private Date birthday;
     @Pattern(regexp = "^[0-9]+$", message = "El número celular no es válido")
@@ -37,7 +36,6 @@ public class Users {
     private String dni;
     @Email(message = "El correo no tiene un formato correcto")
     private String email;
-    @StateUser(message = "El estado no corresponde a lo esperado")
-    private String userState;
+    private Integer userState;
 
 }

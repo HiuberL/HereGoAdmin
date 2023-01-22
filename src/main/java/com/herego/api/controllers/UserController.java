@@ -24,7 +24,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import com.herego.api.controllers.dto.UpdateUser;
-import com.herego.api.dictionaries.ConfigurationsEnum.UserState;
 import com.herego.api.exceptions.ConnectionException;
 import com.herego.api.exceptions.CrudException;
 import com.herego.api.exceptions.NotFoundException;
@@ -48,10 +47,12 @@ public class UserController {
                         @APIResponse(responseCode = "501", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class))),
                         @APIResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class)))
         })
-        public Response getUserById(@QueryParam("page") @NotNull(message = "Parámetro page es requerido") int page,
+        public Response getUserById(
+                        @QueryParam("search") @NotNull(message = "Pámetros search no puede ser nulo") String search,
+                        @QueryParam("page") @NotNull(message = "Parámetro page es requerido") int page,
                         @QueryParam("max") @NotNull(message = "Parámetro max es requerido") int max)
                         throws ConnectionException, NotFoundException, SQLException {
-                return Response.ok().entity(this.userService.getUsers(page, max)).build();
+                return Response.ok().entity(this.userService.getUsers(search, page, max)).build();
         }
 
         @GET
@@ -114,7 +115,7 @@ public class UserController {
                         @APIResponse(responseCode = "400", description = "Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class)))
         })
         public Response deleteUser(@PathParam("id") String phoneUser,
-                        @NotNull(message = "Parámetro state es requerido") @HeaderParam("state") UserState state)
+                        @NotNull(message = "Parámetro state es requerido") @HeaderParam("state") Integer state)
                         throws ConstraintViolationException, ConnectionException, NotFoundException, SQLException,
                         CrudException {
                 return Response.ok().entity(this.userService.deleteUser(phoneUser, state)).build();
